@@ -7,6 +7,7 @@ using ProjectM;
 using Unity.Entities;
 using BepInEx.Logging;
 using BepInEx.Configuration;
+using ProjectM.Shared.Systems;
 
 // This mod takes some code from these two other mods.
 // https://github.com/Blargerist/Sleeping-Speeds-Time - How to edit mission times.
@@ -42,7 +43,6 @@ namespace HuntControl
             logger.LogInfo("Saving data for server shutdown...");
             onSave();
             if (!isAlive) return;
-            logger.LogInfo("Shutting down mission management system.");
             harmony.UnpatchSelf();
             isAlive = false;
         }
@@ -64,19 +64,8 @@ namespace HuntControl
             Log.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
             logger = this.Log;
 
-            if (VWorld.IsClient)
-            {
-                Log.LogWarning("This mod only needs to be installed server side.");
-            }
+            if (VWorld.IsClient) Log.LogWarning("This mod only needs to be installed server side.");
             if (!VWorld.IsServer) return;
-
-            DataStorage.missionsProgressOffline = Config.Bind<bool>("HuntControl", "missionsProgressOffline", true, "Keep mission time running even if offline.");
-            DataStorage.missionTimeMultiplier = Config.Bind<float>("HuntControl", "missionTimeMultiplier", 0, "Multiply how fast missions progress. Example: 2 = 24h becomes 12h. Updates in bulk once a minute.");
-            DataStorage.lastTick = Config.Bind<long>("HuntControl", "lastTick", 0, "Don't edit this.");
-            if (DataStorage.lastTick.Value == 0)
-            {
-                DataStorage.onUpdate();
-            }
 
             DataStorage.Config = Config;
             DataStorage.logger = logger;
@@ -91,26 +80,15 @@ namespace HuntControl
             return true;
         }
 
-        // Save data when the server shuts down.
-        [HarmonyPatch(typeof(ServerBootstrapSystem), "OnDestroy")]
-        public static class ServerBootstrapSystemDestroy_Patch
+        public static class MissionHelper
         {
-            public static void Prefix(ServerBootstrapSystem __instance)
+            public static int processMissions(ServantMissionUpdateSystem __instance, float reduction)
             {
-                DataStorage.onDestroy();
-            }
-        }
 
-        // I'm unsure if there is a better way to make an update tick, but this seems to work fine from my testing.
-        [HarmonyPatch(typeof(FeedableInventorySystem_Update), "OnUpdate")]
-        public static class FeedSystem_OnUpdate_Patch
-        {
+                int missionsProcessed = 0;
 
-            private static DateTime NoUpdateBefore = DateTime.MinValue;
+                if (reduction < 0) return missionsProcessed;
 
-            public static void processMissions(FeedableInventorySystem_Update __instance, float reduction)
-            {
-                if (reduction < 0) return;
                 var servantMissonQuery = __instance.EntityManager.CreateEntityQuery(ComponentType.ReadWrite<ActiveServantMission>());
                 var missionEntities = servantMissonQuery.ToEntityArray(Unity.Collections.Allocator.Temp);
 
@@ -131,19 +109,56 @@ namespace HuntControl
                             {
                                 mission.MissionLength -= reduction;
                             }
-                            logger.LogInfo("Reducing mission " + mission.MissionID.ToString() + " time remaining by " + reduction.ToString() + " seconds.");
+                            missionsProcessed++;
+                            logger.LogDebug("Reducing mission " + mission.MissionID.ToString() + " time remaining by " + reduction.ToString() + " seconds.");
                         }
                         missionBuffer[i] = mission;
                     }
                 }
+
+                return missionsProcessed;
             }
+        }
+
+        // Setup initial data.
+        [HarmonyPatch(typeof(ServantMissionUpdateSystem), "OnCreate")]
+        public static class ServantMissionUpdateSystem_OnCreate_Patch
+        {
+            public static void Prefix(ServantMissionUpdateSystem __instance)
+            {
+                DataStorage.logger.LogDebug("ServantMissionUpdateSystem created.");
+                DataStorage.missionsProgressOffline = DataStorage.Config.Bind<bool>("HuntControl", "missionsProgressOffline", true, "Keep mission time running even if offline.");
+                DataStorage.missionTimeMultiplier = DataStorage.Config.Bind<float>("HuntControl", "missionTimeMultiplier", 0, "Multiply how fast missions progress. Example: 2 = 24h becomes 12h. Updates in bulk once a minute.");
+                DataStorage.lastTick = DataStorage.Config.Bind<long>("HuntControl", "lastTick", 0, "Don't edit this.");
+                if (DataStorage.lastTick.Value == 0) DataStorage.onSave();
+            }
+        }
+
+        // Save data when the server shuts down.
+        [HarmonyPatch(typeof(ServantMissionUpdateSystem), "OnDestroy")]
+        public static class ServantMissionUpdateSystem_OnDestroy_Patch
+        {
+            public static void Prefix(ServerBootstrapSystem __instance)
+            {
+                DataStorage.logger.LogDebug("ServantMissionUpdateSystem destroyed.");
+                DataStorage.onDestroy();
+            }
+        }
+
+        // Hook the update loop for missions.
+        [HarmonyPatch(typeof(ServantMissionUpdateSystem), "OnUpdate")]
+        public static class ServantMissionUpdateSystem_OnUpdate_Patch
+        {
+
+            private static DateTime NoUpdateBefore = DateTime.MinValue;
 
             // Every 60 seconds process mission data.
-            public static void Prefix(FeedableInventorySystem_Update __instance)
+            public static void Prefix(ServantMissionUpdateSystem __instance)
             {
 
                 if (NoUpdateBefore > DateTime.Now) return;
 
+                // @TODO: Find something to hook that only runs once after the mission stuff is fully loaded so I don't have to do a bool check here.
                 if (DataStorage.isFirstTick)
                 {
                     // We've been offline.
@@ -155,11 +170,9 @@ namespace HuntControl
                         int diff = current - last;
                         float seconds = diff / 1000;
                         float multi = DataStorage.missionTimeMultiplier.Value;
-                        if (multi > 0)
-                        {
-                            seconds *= multi;
-                        }
-                        processMissions(__instance, seconds);
+                        if (multi > 0) seconds *= multi;
+                        int proc = MissionHelper.processMissions(__instance, seconds);
+                        logger.LogInfo("Processed " + proc.ToString() + " missions. Time reduced by " + seconds.ToString() + " seconds.");
                     }
                     DataStorage.isFirstTick = false;
                     NoUpdateBefore = DateTime.Now.AddMilliseconds(60000);
@@ -172,14 +185,10 @@ namespace HuntControl
                     float multi = DataStorage.missionTimeMultiplier.Value;
                     float seconds = 60 * multi;
                     seconds -= 60;
-                    if (seconds > 0)
-                    {
-                        processMissions(__instance, seconds);
-                    }
+                    if (seconds > 0) MissionHelper.processMissions(__instance, seconds);
                 }
 
                 NoUpdateBefore = DateTime.Now.AddMilliseconds(60000);
-                DataStorage.onUpdate();
             }
         }
     }

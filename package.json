@@ -1,0 +1,26 @@
+{
+  "name": "huntcontrol",
+  "version": "1.0.0",
+  "description": "V Rising mod that makes missions progress when the game is closed",
+  "main": "index.js",
+  "scripts": {
+    "build": "ts-node ./index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/denoflionsx/HuntControl.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/denoflionsx/HuntControl/issues"
+  },
+  "homepage": "https://github.com/denoflionsx/HuntControl#readme",
+  "dependencies": {
+    "@types/adm-zip": "^0.5.0",
+    "@types/node": "^18.0.0",
+    "adm-zip": "^0.5.9",
+    "ts-node": "^10.8.1",
+    "typescript": "^4.7.4"
+  }
+}
