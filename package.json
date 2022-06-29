@@ -22,5 +22,11 @@
     "adm-zip": "^0.5.9",
     "ts-node": "^10.8.1",
     "typescript": "^4.7.4"
+  },
+  "thunderstore": {
+    "dependencies": [
+      "BepInEx-BepInExPack_V_Rising-1.0.0",
+      "molenzwiebel-Wetstone-1.1.0"
+    ]
   }
 }
