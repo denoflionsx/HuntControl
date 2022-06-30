@@ -38,7 +38,7 @@ namespace HuntControl.Injuries
 
             if (firstTick)
             {
-                float seconds = Storage.getSecondsSinceLastSave();
+                float seconds = Storage.getSecondsSinceLastSave(Storage.injuryTimeMultiplier.Value);
                 Storage.logger.LogInfo("Processing all servant coffins...");
                 int proc = InjuryHelper.processInjuries(__instance, seconds);
                 Storage.logger.LogInfo("Processed " + proc.ToString() + " coffins. Injury time reduced by " + seconds.ToString() + " seconds.");

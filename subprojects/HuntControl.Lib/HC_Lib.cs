@@ -24,13 +24,12 @@ namespace HuntControl.Lib
             lastTick.Value = DateTimeOffset.Now.ToUnixTimeMilliseconds();
         }
 
-        public static float getSecondsSinceLastSave()
+        public static float getSecondsSinceLastSave(float multi)
         {
             int current = (int)DateTimeOffset.Now.ToUnixTimeMilliseconds();
             int last = (int)lastTick.Value;
             int diff = current - last;
             float seconds = diff / 1000;
-            float multi = missionTimeMultiplier.Value;
             if (multi > 0) seconds *= multi;
             return seconds;
         }

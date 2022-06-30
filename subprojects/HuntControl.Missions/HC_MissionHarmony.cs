@@ -60,7 +60,7 @@ namespace HuntControl.Missions
                 if (Storage.missionsProgressOffline.Value)
                 {
                     Storage.logger.LogInfo("Processing missions since last session...");
-                    float seconds = Storage.getSecondsSinceLastSave();
+                    float seconds = Storage.getSecondsSinceLastSave(Storage.missionTimeMultiplier.Value);
                     int proc = MissionHelper.processMissions(__instance, seconds);
                     Storage.logger.LogInfo("Processed " + proc.ToString() + " missions. Time reduced by " + seconds.ToString() + " seconds.");
                 }
