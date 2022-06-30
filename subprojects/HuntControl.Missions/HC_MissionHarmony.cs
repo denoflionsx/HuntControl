@@ -10,7 +10,7 @@ namespace HuntControl.Missions
     public static class MissionHarmony
     {
         public static void Apply() {
-            if (Storage.missionsProgressOffline.Value || Storage.missionTimeMultiplier.Value > 0) Storage.harmony.PatchAll();
+            Storage.harmony.PatchAll();
         }
     }
 

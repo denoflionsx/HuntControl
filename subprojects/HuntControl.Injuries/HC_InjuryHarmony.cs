@@ -10,7 +10,7 @@ namespace HuntControl.Injuries
     {
         public static void Apply()
         {
-            if (Storage.injuriesProgressOffline.Value || Storage.injuryTimeMultiplier.Value > 0) Storage.harmony.PatchAll();
+            Storage.harmony.PatchAll();
         }
     }
 
@@ -39,9 +39,9 @@ namespace HuntControl.Injuries
             if (firstTick)
             {
                 float seconds = Storage.getSecondsSinceLastSave();
-                Storage.logger.LogInfo("Processing all injuries since last session...");
+                Storage.logger.LogInfo("Processing all servant coffins...");
                 int proc = InjuryHelper.processInjuries(__instance, seconds);
-                Storage.logger.LogInfo("Processed " + proc.ToString() + " injuries. Time reduced by " + seconds.ToString() + " seconds.");
+                Storage.logger.LogInfo("Processed " + proc.ToString() + " coffins. Injury time reduced by " + seconds.ToString() + " seconds.");
                 firstTick = false;
                 NoUpdateBefore = DateTime.Now.AddMilliseconds(60000);
                 return;
