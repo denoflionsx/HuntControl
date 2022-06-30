@@ -35,9 +35,17 @@ namespace HuntControl.Lib
             return seconds;
         }
 
-        public static float getTimerMultiplierTick()
+        public static float getMissionTimerMultiplierTick()
         {
             float multi = missionTimeMultiplier.Value;
+            float seconds = 60 * multi;
+            seconds -= 60;
+            return seconds;
+        }
+
+        public static float getInjuryTimerMultiplierTick()
+        {
+            float multi = injuryTimeMultiplier.Value;
             float seconds = 60 * multi;
             seconds -= 60;
             return seconds;

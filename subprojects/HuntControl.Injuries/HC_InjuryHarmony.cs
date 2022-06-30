@@ -49,7 +49,7 @@ namespace HuntControl.Injuries
 
             if (Storage.injuryTimeMultiplier.Value > 0)
             {
-                float seconds = Storage.getTimerMultiplierTick();
+                float seconds = Storage.getInjuryTimerMultiplierTick();
                 if (seconds > 0) InjuryHelper.processInjuries(__instance, seconds);
             }
 

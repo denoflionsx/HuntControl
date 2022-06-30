@@ -72,7 +72,7 @@ namespace HuntControl.Missions
             // Do time reduction multiplier.
             if (Storage.missionTimeMultiplier.Value > 0)
             {
-                float seconds = Storage.getTimerMultiplierTick();
+                float seconds = Storage.getMissionTimerMultiplierTick();
                 if (seconds > 0) MissionHelper.processMissions(__instance, seconds);
             }
 
