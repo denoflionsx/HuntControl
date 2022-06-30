@@ -1,5 +1,4 @@
-﻿using HuntControl.Lib;
-using ProjectM;
+﻿using ProjectM;
 using ProjectM.Shared.Systems;
 using Unity.Entities;
 
