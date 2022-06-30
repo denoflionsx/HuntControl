@@ -38,6 +38,25 @@ class Manifest implements IManifest {
 
 }
 
+function getAllFiles(dirPath: string, arrayOfFiles: Array<string>, ext: string = "*") {
+    let files = fs.readdirSync(dirPath);
+
+    arrayOfFiles = arrayOfFiles || [];
+
+    files.forEach((file) => {
+        if (fs.statSync(dirPath + "/" + file).isDirectory()) {
+            arrayOfFiles = getAllFiles(dirPath + "/" + file, arrayOfFiles, ext);
+        }
+        else {
+            if (path.parse(file).ext === ext || ext === "*") {
+                arrayOfFiles.push(path.join(dirPath, "/", file));
+            }
+        }
+    });
+
+    return arrayOfFiles;
+}
+
 if (!fs.existsSync("./config.json")) {
     createConfig();
 } else {
@@ -49,23 +68,26 @@ function createConfig() {
 }
 
 function build() {
-    let inpath: string = path.resolve(`./bin/Release/netstandard2.1/${DLL_NAME}.dll`);
-    let outpath: string = path.resolve((JSON.parse(fs.readFileSync("./config.json").toString()) as Config).outpath, `${DLL_NAME}.dll`);
+    let inpath: string = path.resolve(`./subprojects/HuntControl/bin/Release`);
+    let outpath: string = path.resolve((JSON.parse(fs.readFileSync("./config.json").toString()) as Config).outpath);
     // Build the C#.
     console.log(child_process.execSync("dotnet build --configuration Release").toString());
     // Clean up all the extra crap VS throws into the release folder.
-    let dir = path.parse(inpath).dir;
-    fs.readdirSync(dir).forEach((file: string) => {
-        let f = path.resolve(dir, file);
-        if (fs.existsSync(f)) {
-            if (path.parse(f).name !== DLL_NAME) {
-                fs.unlinkSync(f);
-            }
+    let files = getAllFiles(inpath, [], ".dll");
+    let dlls: string[] = [];
+    files.forEach((file: string) => {
+        if (path.parse(file).base.indexOf(DLL_NAME) === -1) {
+            //fs.unlinkSync(file);
+        } else {
+            dlls.push(file);
         }
     });
     // Copy file to game dir for testing.
-    fs.copyFileSync(inpath, outpath);
-    dist();
+    dlls.forEach((dll: string) => {
+        console.log(dll);
+        fs.copyFileSync(dll, path.resolve(outpath, path.parse(dll).base));
+    });
+    dist(dlls);
 }
 
 function generate_manifest() {
@@ -74,11 +96,12 @@ function generate_manifest() {
     return m.toBuffer();
 }
 
-function dist() {
+function dist(dlls: string[]) {
     // Pack dll into zip file.
-    let inpath: string = path.resolve(`./bin/Release/netstandard2.1/${DLL_NAME}.dll`);
     let zip = new AdmZip();
-    zip.addFile(`${DLL_NAME}.dll`, fs.readFileSync(inpath));
+    dlls.forEach((dll: string) => {
+        zip.addFile(path.parse(dll).base, fs.readFileSync(dll));
+    });
     zip.addFile(`manifest.json`, generate_manifest());
     zip.addFile(`README.md`, fs.readFileSync("./README.md"));
     zip.addFile(`icon.png`, fs.readFileSync("./icon.png"));

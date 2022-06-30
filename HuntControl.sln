@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HuntControl", "HuntControl.csproj", "{FBB92143-EC9E-4C6A-8022-B3A0A151FF92}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HuntControl", "subprojects\HuntControl\HuntControl.csproj", "{4B1971C9-2FC2-4789-A216-9266D722ED57}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HuntControl.Missions", "subprojects\HuntControl.Missions\HuntControl.Missions.csproj", "{AD8E0C2B-3346-4F3D-AAC6-E898A032E7B0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HuntControl.DataStorage", "subprojects\HuntControl.DataStorage\HuntControl.DataStorage.csproj", "{F5A75CB4-5B29-46ED-94BF-DB0DB4FEFFB4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HuntControl.Injuries", "subprojects\HuntControl.Injuries\HuntControl.Injuries.csproj", "{4416E9A0-202C-4700-802A-A7A518F53DE5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +17,27 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{FBB92143-EC9E-4C6A-8022-B3A0A151FF92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FBB92143-EC9E-4C6A-8022-B3A0A151FF92}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FBB92143-EC9E-4C6A-8022-B3A0A151FF92}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FBB92143-EC9E-4C6A-8022-B3A0A151FF92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B1971C9-2FC2-4789-A216-9266D722ED57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B1971C9-2FC2-4789-A216-9266D722ED57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B1971C9-2FC2-4789-A216-9266D722ED57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B1971C9-2FC2-4789-A216-9266D722ED57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD8E0C2B-3346-4F3D-AAC6-E898A032E7B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD8E0C2B-3346-4F3D-AAC6-E898A032E7B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD8E0C2B-3346-4F3D-AAC6-E898A032E7B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD8E0C2B-3346-4F3D-AAC6-E898A032E7B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5A75CB4-5B29-46ED-94BF-DB0DB4FEFFB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5A75CB4-5B29-46ED-94BF-DB0DB4FEFFB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5A75CB4-5B29-46ED-94BF-DB0DB4FEFFB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5A75CB4-5B29-46ED-94BF-DB0DB4FEFFB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4416E9A0-202C-4700-802A-A7A518F53DE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4416E9A0-202C-4700-802A-A7A518F53DE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4416E9A0-202C-4700-802A-A7A518F53DE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4416E9A0-202C-4700-802A-A7A518F53DE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {9F99DAD1-0951-4F03-B19E-269B5AAFC522}
+		SolutionGuid = {6FFBC3BF-68DA-48BD-BE05-4C615EBE67A5}
 	EndGlobalSection
 EndGlobal

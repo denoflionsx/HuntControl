@@ -19,6 +19,13 @@
     <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" />
     <PackageReference Include="Wetstone" Version="1.1.0" />
   </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\HuntControl.DataStorage\HuntControl.DataStorage.csproj" />
+    <ProjectReference Include="..\HuntControl.Injuries\HuntControl.Injuries.csproj" />
+    <ProjectReference Include="..\HuntControl.Missions\HuntControl.Missions.csproj" />
+  </ItemGroup>
   
   <ItemGroup>
     <Reference Include="IL2Cppmscorlib">
