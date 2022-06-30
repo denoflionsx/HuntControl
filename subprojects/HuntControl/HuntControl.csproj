@@ -22,8 +22,8 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\HuntControl.DataStorage\HuntControl.DataStorage.csproj" />
     <ProjectReference Include="..\HuntControl.Injuries\HuntControl.Injuries.csproj" />
+    <ProjectReference Include="..\HuntControl.Lib\HuntControl.Lib.csproj" />
     <ProjectReference Include="..\HuntControl.Missions\HuntControl.Missions.csproj" />
   </ItemGroup>
   

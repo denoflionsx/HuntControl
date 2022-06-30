@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HuntControl", "subprojects\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HuntControl.Missions", "subprojects\HuntControl.Missions\HuntControl.Missions.csproj", "{AD8E0C2B-3346-4F3D-AAC6-E898A032E7B0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HuntControl.DataStorage", "subprojects\HuntControl.DataStorage\HuntControl.DataStorage.csproj", "{F5A75CB4-5B29-46ED-94BF-DB0DB4FEFFB4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HuntControl.Lib", "subprojects\HuntControl.Lib\HuntControl.Lib.csproj", "{F5A75CB4-5B29-46ED-94BF-DB0DB4FEFFB4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HuntControl.Injuries", "subprojects\HuntControl.Injuries\HuntControl.Injuries.csproj", "{4416E9A0-202C-4700-802A-A7A518F53DE5}"
 EndProject

@@ -1,5 +1,5 @@
 ﻿using HarmonyLib;
-using HuntControl.DataStorage;
+using HuntControl.Lib;
 using ProjectM.Shared.Systems;
 using System;
 

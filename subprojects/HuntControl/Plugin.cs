@@ -4,7 +4,7 @@ using Wetstone.API;
 using HarmonyLib;
 using System;
 using BepInEx.Logging;
-using HuntControl.DataStorage;
+using HuntControl.Lib;
 using HuntControl.Missions;
 using HuntControl.Injuries;
 

@@ -4,7 +4,7 @@ using HarmonyLib;
 using System;
 using System.Collections.Generic;
 
-namespace HuntControl.DataStorage
+namespace HuntControl.Lib
 {
     public static class Storage
     {

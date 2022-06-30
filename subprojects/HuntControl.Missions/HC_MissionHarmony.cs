@@ -2,7 +2,7 @@
 using ProjectM;
 using ProjectM.Shared.Systems;
 using HarmonyLib;
-using HuntControl.DataStorage;
+using HuntControl.Lib;
 
 namespace HuntControl.Missions
 {
