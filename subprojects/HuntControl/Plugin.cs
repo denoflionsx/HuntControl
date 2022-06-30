@@ -21,9 +21,6 @@ namespace HuntControl
     {
 
         public static ManualLogSource logger;
-        const String pluginGUID = "com.modloader64.HuntControl";
-        const String pluginName = "HuntControl";
-        const String pluginVersion = "1.0.0";
 
         public override void Load()
         {
@@ -41,7 +38,7 @@ namespace HuntControl
             Storage.logVerbose("Logging all information.");
 
             Storage.logger = logger;
-            Storage.harmony = new Harmony(pluginGUID);
+            Storage.harmony = new Harmony(PluginInfo.PLUGIN_GUID);
             MissionHarmony.Apply();
             InjuryHarmony.Apply();
             Storage.isAlive = true;
