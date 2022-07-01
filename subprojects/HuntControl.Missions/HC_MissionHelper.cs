@@ -7,19 +7,37 @@ namespace HuntControl.Missions
 {
     public static class MissionHelper
     {
-        public static int processMissions(ServantMissionUpdateSystem __instance, float reduction)
+
+        public static int getNumberOfMissions(EntityManager __instance){
+            var servantMissonQuery = __instance.CreateEntityQuery(ComponentType.ReadWrite<ActiveServantMission>());
+            var missionEntities = servantMissonQuery.ToEntityArray(Unity.Collections.Allocator.Temp);
+
+            var count = 0;
+
+            foreach (var missionEntity in missionEntities)
+            {
+                var missionBuffer = __instance.GetBuffer<ActiveServantMission>(missionEntity);
+
+                count += missionBuffer.Length;
+            }
+
+            return count;
+        }
+
+
+        public static int processMissions(EntityManager __instance, float reduction)
         {
 
             int missionsProcessed = 0;
 
             if (reduction < 0) return missionsProcessed;
 
-            var servantMissonQuery = __instance.EntityManager.CreateEntityQuery(ComponentType.ReadWrite<ActiveServantMission>());
+            var servantMissonQuery = __instance.CreateEntityQuery(ComponentType.ReadWrite<ActiveServantMission>());
             var missionEntities = servantMissonQuery.ToEntityArray(Unity.Collections.Allocator.Temp);
 
             foreach (var missionEntity in missionEntities)
             {
-                var missionBuffer = __instance.EntityManager.GetBuffer<ActiveServantMission>(missionEntity);
+                var missionBuffer = __instance.GetBuffer<ActiveServantMission>(missionEntity);
 
                 for (int i = 0; i < missionBuffer.Length; i++)
                 {

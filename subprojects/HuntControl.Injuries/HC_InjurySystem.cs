@@ -10,12 +10,12 @@ namespace HuntControl.Injuries
         public static void Apply()
         {
             Storage.createCallbacks.Add(typeof(InjurySystem_Create).Name, InjurySystem_Create.Prefix);
-            Storage.timeouts.Add(typeof(InjurySystem).Name, new Timeout(Register, 40));
+            Storage.timeouts.Add(typeof(InjurySystem).Name, new Timeout(Register, 35));
+            Storage.logger.LogInfo("Injury module will start in 35 seconds.");
         }
 
         public static void Register(bool b)
         {
-            Storage.destroyCallbacks.Add(typeof(InjurySystem_Destroy).Name, InjurySystem_Destroy.Prefix);
             Storage.updateCallbacks.Add(typeof(InjurySystem_Update).Name, InjurySystem_Update.Prefix);
         }
     }
@@ -28,11 +28,6 @@ namespace HuntControl.Injuries
             Storage.injuriesProgressOffline = Storage.Config.Bind<bool>("HuntControl.Injuries", "injuriesProgressOffline", true, "Let injuries heal while offline.");
             Storage.injuryTimeMultiplier = Storage.Config.Bind<float>("HuntControl.Injuries", "injuryTimeMultiplier", 0, "Speed up injury healing. 0 = disabled. 2 = 2x speed, etc.");
         }
-    }
-
-    public static class InjurySystem_Destroy
-    {
-        public static void Prefix(ServantMissionUpdateSystem __instance) { }
     }
 
     public static class InjurySystem_Update

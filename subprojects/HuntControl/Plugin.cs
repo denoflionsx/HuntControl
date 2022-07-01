@@ -9,6 +9,9 @@ using HuntControl.Injuries;
 using ProjectM.Shared.Systems;
 using System;
 using System.Collections.Generic;
+using ProjectM;
+using Stunlock.Network;
+using ProjectM.Network;
 
 // This mod takes some code from these two other mods.
 // https://github.com/Blargerist/Sleeping-Speeds-Time - How to edit mission times.
@@ -54,7 +57,7 @@ namespace HuntControl
             Storage.onDestroy();
             return true;
         }
-
+        
         // Setup initial data.
         [HarmonyPatch(typeof(ServantMissionUpdateSystem), "OnCreate")]
         public static class ServantMissionUpdateSystem_OnCreate_Patch
@@ -86,12 +89,19 @@ namespace HuntControl
         public static class ServantMissionUpdateSystem_OnUpdate_Patch
         {
 
+            public static DateTime NoUpdateBefore = DateTime.Now.AddMilliseconds(1000);
+
             public static void Prefix(ServantMissionUpdateSystem __instance)
             {
                 foreach (KeyValuePair<string, Action<ServantMissionUpdateSystem>> entry in Storage.updateCallbacks)
                 {
                     entry.Value(__instance);
                 }
+
+                if (NoUpdateBefore > DateTime.Now) return;
+
+                NoUpdateBefore = DateTime.Now.AddMilliseconds(1000);
+
                 if (Storage.timeouts.Count > 0)
                 {
                     Dictionary<string, bool> remove = new Dictionary<string, bool>();
@@ -99,7 +109,7 @@ namespace HuntControl
                     {
                         if (entry.Value.time > 0)
                         {
-                            entry.Value.time--;
+                            entry.Value.time -= 1000;
                         }
                         else
                         {

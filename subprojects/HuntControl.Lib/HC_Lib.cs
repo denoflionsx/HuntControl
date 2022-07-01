@@ -1,6 +1,7 @@
 ﻿using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
+using ProjectM;
 using ProjectM.Shared.Systems;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace HuntControl.Lib
 
         public Timeout(Action<bool> t, int time)
         {
-            this.time = time;
+            this.time = time * 1000;
             this.t = t;
         }
     }

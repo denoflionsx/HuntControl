@@ -75,6 +75,10 @@
     <Reference Include="UnityEngine.InputLegacyModule">
         <HintPath>$(UnhollowedDllPath)\UnityEngine.InputLegacyModule.dll</HintPath>
     </Reference>
+	
+	<Reference Include="UnityEngine.InputLegacyModule">
+        <HintPath>$(UnhollowedDllPath)\com.stunlock.network.dll</HintPath>
+    </Reference>
 </ItemGroup>
 </Project>
 
