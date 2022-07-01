@@ -1,10 +1,25 @@
 ﻿using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
+using ProjectM.Shared.Systems;
 using System;
+using System.Collections.Generic;
 
 namespace HuntControl.Lib
 {
+
+    public class Timeout
+    {
+        public int time;
+        public Action<bool> t;
+
+        public Timeout(Action<bool> t, int time)
+        {
+            this.time = time;
+            this.t = t;
+        }
+    }
+
     public static class Storage
     {
         public static Harmony harmony;
@@ -15,6 +30,10 @@ namespace HuntControl.Lib
         public static ConfigEntry<bool> injuriesProgressOffline;
         public static ConfigEntry<float> injuryTimeMultiplier;
         public static ConfigEntry<long> lastTick;
+        public static Dictionary<string, Action<ServantMissionUpdateSystem>> createCallbacks = new Dictionary<string, Action<ServantMissionUpdateSystem>>();
+        public static Dictionary<string, Action<ServantMissionUpdateSystem>> updateCallbacks = new Dictionary<string, Action<ServantMissionUpdateSystem>>();
+        public static Dictionary<string, Action<ServantMissionUpdateSystem>> destroyCallbacks = new Dictionary<string, Action<ServantMissionUpdateSystem>>();
+        public static Dictionary<string, Timeout> timeouts = new Dictionary<string, Timeout>();
         public static ManualLogSource logger;
         public static bool isAlive = false;
 

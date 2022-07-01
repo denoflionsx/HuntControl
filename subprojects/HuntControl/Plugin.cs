@@ -6,6 +6,9 @@ using BepInEx.Logging;
 using HuntControl.Lib;
 using HuntControl.Missions;
 using HuntControl.Injuries;
+using ProjectM.Shared.Systems;
+using System;
+using System.Collections.Generic;
 
 // This mod takes some code from these two other mods.
 // https://github.com/Blargerist/Sleeping-Speeds-Time - How to edit mission times.
@@ -38,8 +41,11 @@ namespace HuntControl
 
             Storage.logger = logger;
             Storage.harmony = new Harmony(PluginInfo.PLUGIN_GUID);
-            MissionHarmony.Apply();
-            InjuryHarmony.Apply();
+            Storage.harmony.PatchAll();
+
+            MissionSystem.Apply();
+            InjurySystem.Apply();
+
             Storage.isAlive = true;
         }
 
@@ -47,6 +53,69 @@ namespace HuntControl
         {
             Storage.onDestroy();
             return true;
+        }
+
+        // Setup initial data.
+        [HarmonyPatch(typeof(ServantMissionUpdateSystem), "OnCreate")]
+        public static class ServantMissionUpdateSystem_OnCreate_Patch
+        {
+            public static void Prefix(ServantMissionUpdateSystem __instance)
+            {
+                foreach (Action< ServantMissionUpdateSystem> cb in Storage.createCallbacks.Values)
+                {
+                    cb(__instance);
+                }
+            }
+        }
+
+        // Save data when the server shuts down.
+        [HarmonyPatch(typeof(ServantMissionUpdateSystem), "OnDestroy")]
+        public static class ServantMissionUpdateSystem_OnDestroy_Patch
+        {
+            public static void Prefix(ServantMissionUpdateSystem __instance)
+            {
+                foreach (Action<ServantMissionUpdateSystem> cb in Storage.destroyCallbacks.Values)
+                {
+                    cb(__instance);
+                }
+            }
+        }
+
+        // Hook the update loop for missions.
+        [HarmonyPatch(typeof(ServantMissionUpdateSystem), "OnUpdate")]
+        public static class ServantMissionUpdateSystem_OnUpdate_Patch
+        {
+
+            public static void Prefix(ServantMissionUpdateSystem __instance)
+            {
+                foreach (KeyValuePair<string, Action<ServantMissionUpdateSystem>> entry in Storage.updateCallbacks)
+                {
+                    entry.Value(__instance);
+                }
+                if (Storage.timeouts.Count > 0)
+                {
+                    Dictionary<string, bool> remove = new Dictionary<string, bool>();
+                    foreach (KeyValuePair<string, Timeout> entry in Storage.timeouts)
+                    {
+                        if (entry.Value.time > 0)
+                        {
+                            entry.Value.time--;
+                        }
+                        else
+                        {
+                            remove.Add(entry.Key, true);
+                            entry.Value.t(true);
+                        }
+                    }
+                    if (remove.Count > 0)
+                    {
+                        foreach(KeyValuePair<string, bool> entry in remove)
+                        {
+                            Storage.timeouts.Remove(entry.Key);
+                        }
+                    }
+                }
+            }
         }
     }
 }

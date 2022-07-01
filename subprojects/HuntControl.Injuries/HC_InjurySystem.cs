@@ -1,22 +1,27 @@
-﻿using HarmonyLib;
-using HuntControl.Lib;
+﻿using HuntControl.Lib;
 using ProjectM.Shared.Systems;
 using System;
 
 namespace HuntControl.Injuries
 {
 
-    public static class InjuryHarmony
+    public static class InjurySystem
     {
         public static void Apply()
         {
-            Storage.harmony.PatchAll();
+            Storage.createCallbacks.Add(typeof(InjurySystem_Create).Name, InjurySystem_Create.Prefix);
+            Storage.timeouts.Add(typeof(InjurySystem).Name, new Timeout(Register, 40));
+        }
+
+        public static void Register(bool b)
+        {
+            Storage.destroyCallbacks.Add(typeof(InjurySystem_Destroy).Name, InjurySystem_Destroy.Prefix);
+            Storage.updateCallbacks.Add(typeof(InjurySystem_Update).Name, InjurySystem_Update.Prefix);
         }
     }
 
     // Setup initial data.
-    [HarmonyPatch(typeof(ServantMissionUpdateSystem), "OnCreate")]
-    public static class ServantMissionUpdateSystem_OnCreate_Patch
+    public static class InjurySystem_Create
     {
         public static void Prefix(ServantMissionUpdateSystem __instance)
         {
@@ -25,8 +30,12 @@ namespace HuntControl.Injuries
         }
     }
 
-    [HarmonyPatch(typeof(ServantMissionUpdateSystem), "OnUpdate")]
-    public static class ServantMissionUpdateSystem_OnUpdate_Patch
+    public static class InjurySystem_Destroy
+    {
+        public static void Prefix(ServantMissionUpdateSystem __instance) { }
+    }
+
+    public static class InjurySystem_Update
     {
 
         private static DateTime NoUpdateBefore = DateTime.MinValue;

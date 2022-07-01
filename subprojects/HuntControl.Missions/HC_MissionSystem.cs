@@ -1,22 +1,26 @@
 ﻿using System;
-using ProjectM;
 using ProjectM.Shared.Systems;
-using HarmonyLib;
 using HuntControl.Lib;
 
 namespace HuntControl.Missions
 {
 
-    public static class MissionHarmony
+    public static class MissionSystem
     {
         public static void Apply() {
-            Storage.harmony.PatchAll();
+            Storage.createCallbacks.Add(typeof(MissionSystem_Startup).Name, MissionSystem_Startup.Prefix);
+            Storage.timeouts.Add(typeof(MissionSystem).Name, new Timeout(Register, 20));
+        }
+
+        public static void Register(bool b)
+        {
+            Storage.destroyCallbacks.Add(typeof(MissionSystem_Shutdown).Name, MissionSystem_Shutdown.Prefix);
+            Storage.updateCallbacks.Add(typeof(MissionSystem_Update).Name, MissionSystem_Update.Prefix);
         }
     }
 
-    // Setup initial data.
-    [HarmonyPatch(typeof(ServantMissionUpdateSystem), "OnCreate")]
-    public static class ServantMissionUpdateSystem_OnCreate_Patch
+    // Setup initial data.eate"
+    public static class MissionSystem_Startup
     {
         public static void Prefix(ServantMissionUpdateSystem __instance)
         {
@@ -29,10 +33,9 @@ namespace HuntControl.Missions
     }
 
     // Save data when the server shuts down.
-    [HarmonyPatch(typeof(ServantMissionUpdateSystem), "OnDestroy")]
-    public static class ServantMissionUpdateSystem_OnDestroy_Patch
+    public static class MissionSystem_Shutdown
     {
-        public static void Prefix(ServerBootstrapSystem __instance)
+        public static void Prefix(ServantMissionUpdateSystem __instance)
         {
             Storage.logVerbose("ServantMissionUpdateSystem destroyed.");
             Storage.onDestroy();
@@ -40,12 +43,11 @@ namespace HuntControl.Missions
     }
 
     // Hook the update loop for missions.
-    [HarmonyPatch(typeof(ServantMissionUpdateSystem), "OnUpdate")]
-    public static class ServantMissionUpdateSystem_OnUpdate_Patch
+    public static class MissionSystem_Update
     {
 
-        private static bool firstTick = true;
-        private static DateTime NoUpdateBefore = DateTime.MinValue;
+        public static bool firstTick = true;
+        public static DateTime NoUpdateBefore = DateTime.MinValue;
 
         // Every 60 seconds process mission data.
         public static void Prefix(ServantMissionUpdateSystem __instance)
@@ -77,6 +79,8 @@ namespace HuntControl.Missions
             }
 
             NoUpdateBefore = DateTime.Now.AddMilliseconds(60000);
+
+            Storage.onUpdate();
         }
     }
 }
