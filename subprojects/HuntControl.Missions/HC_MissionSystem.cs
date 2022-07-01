@@ -19,7 +19,7 @@ namespace HuntControl.Missions
         }
     }
 
-    // Setup initial data.eate"
+    // Setup initial data.
     public static class MissionSystem_Startup
     {
         public static void Prefix(ServantMissionUpdateSystem __instance)
