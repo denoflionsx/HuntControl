@@ -40,9 +40,10 @@ namespace HuntControl
 
             Storage.verboseLogOutput = Storage.Config.Bind<bool>("Debugging", "verboseLogOutput", false, "Log everything for debugging");
 
+            Storage.logger = logger;
+
             Storage.logVerbose("Logging all information.");
 
-            Storage.logger = logger;
             Storage.harmony = new Harmony(PluginInfo.PLUGIN_GUID);
             Storage.harmony.PatchAll();
 
