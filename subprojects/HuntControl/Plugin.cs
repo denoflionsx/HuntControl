@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using ProjectM;
 using Stunlock.Network;
 using ProjectM.Network;
+using System.IO;
 
 // This mod takes some code from these two other mods.
 // https://github.com/Blargerist/Sleeping-Speeds-Time - How to edit mission times.
@@ -33,7 +34,18 @@ namespace HuntControl
             Log.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
             logger = this.Log;
 
-            if (VWorld.IsClient) Log.LogWarning("This mod only needs to be installed server side.");
+            if (VWorld.IsClient) { 
+                Log.LogWarning("This mod only needs to be installed server side.");
+                var upDir = Directory.GetParent(Config.ConfigFilePath).FullName;
+                if (Directory.Exists($"{upDir}"))
+                {
+                    if (!File.Exists($"{upDir}/HuntControl_config_is_in_server_folder.txt"))
+                    {
+                        var stream = File.Create($"{upDir}/HuntControl_config_is_in_server_folder.txt");
+                        stream.Dispose();
+                    }
+                }
+            }
             if (!VWorld.IsServer) return;
 
             Storage.Config = Config;
