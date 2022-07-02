@@ -9,9 +9,6 @@ using HuntControl.Injuries;
 using ProjectM.Shared.Systems;
 using System;
 using System.Collections.Generic;
-using ProjectM;
-using Stunlock.Network;
-using ProjectM.Network;
 
 // This mod takes some code from these two other mods.
 // https://github.com/Blargerist/Sleeping-Speeds-Time - How to edit mission times.
@@ -33,24 +30,37 @@ namespace HuntControl
             Log.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
             logger = this.Log;
 
-            if (VWorld.IsClient) Log.LogWarning("This mod only needs to be installed server side.");
-            if (!VWorld.IsServer) return;
+            universal(this);
 
-            Storage.Config = Config;
+            if (VWorld.IsClient)
+            {
+                clientside(this);
+            }
+            if (VWorld.IsServer)
+            {
+                serverside(this);
+            }
 
-            Storage.verboseLogOutput = Storage.Config.Bind<bool>("Debugging", "verboseLogOutput", false, "Log everything for debugging");
+        }
 
-            Storage.logger = logger;
-
-            Storage.logVerbose("Logging all information.");
-
-            Storage.harmony = new Harmony(PluginInfo.PLUGIN_GUID);
+        public static void serverside(Plugin parent) {
             Storage.harmony.PatchAll();
-
             MissionSystem.Apply();
             InjurySystem.Apply();
+        }
 
+        public static void clientside(Plugin parent) {
+            Storage.clientMsg = parent.Config.Bind<string>("HuntControl", "WrongSide", "This is a server side mod but you're looking in the client config folder. Go to BepInEx_Server/config instead.", "I get asked this question a lot.");
+        }
+
+        public static void universal(Plugin parent)
+        {
+            Storage.Config = parent.Config;
+            Storage.verboseLogOutput = Storage.Config.Bind<bool>("Debugging", "verboseLogOutput", false, "Log everything for debugging");
+            Storage.logger = logger;
+            Storage.logVerbose("Logging all information.");
             Storage.isAlive = true;
+            Storage.harmony = new Harmony(PluginInfo.PLUGIN_GUID);
         }
 
         public override bool Unload()

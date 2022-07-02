@@ -1,7 +1,6 @@
 ﻿using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
-using ProjectM;
 using ProjectM.Shared.Systems;
 using System;
 using System.Collections.Generic;
@@ -25,6 +24,7 @@ namespace HuntControl.Lib
     {
         public static Harmony harmony;
         public static ConfigFile Config;
+        public static ConfigEntry<string> clientMsg;
         public static ConfigEntry<bool> verboseLogOutput;
         public static ConfigEntry<bool> missionsProgressOffline;
         public static ConfigEntry<float> missionTimeMultiplier;
