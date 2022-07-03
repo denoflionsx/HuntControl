@@ -25,7 +25,7 @@ namespace HuntControl.Missions
         }
 
 
-        public static int processMissions(EntityManager __instance, float reduction)
+        public static int processMissions(EntityManager __instance, float reduction, bool forceComplete = false)
         {
 
             int missionsProcessed = 0;
@@ -52,6 +52,7 @@ namespace HuntControl.Missions
                         {
                             mission.MissionLength -= reduction;
                         }
+                        if (forceComplete) mission.MissionLength = 0;
                         missionsProcessed++;
                         Storage.logVerbose("Reducing mission " + mission.MissionID.ToString() + " time remaining by " + reduction.ToString() + " seconds.");
                         missionBuffer[i] = mission;

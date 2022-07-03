@@ -29,6 +29,7 @@ namespace HuntControl.Missions
             Storage.missionsProgressOffline = Storage.Config.Bind<bool>("HuntControl", "missionsProgressOffline", true, "Keep mission time running even if offline.");
             Storage.missionTimeMultiplier = Storage.Config.Bind<float>("HuntControl", "missionTimeMultiplier", 0, "Multiply how fast missions progress. Example: 2 = 24h becomes 12h. Updates in bulk once a minute.");
             Storage.lastTick = Storage.Config.Bind<long>("HuntControl", "lastTick", 0, "Don't edit this.");
+            Storage.forceCompleteAllMissions = Storage.Config.Bind<bool>("HuntControl", "forceCompleteAllMissions", false, "This option will force every mission to complete immediately on boot then disable itself.");
             if (Storage.lastTick.Value == 0) Storage.onSave();
         }
     }
@@ -62,9 +63,10 @@ namespace HuntControl.Missions
                 // We've been offline.
                 if (Storage.missionsProgressOffline.Value && MissionHelper.getNumberOfMissions(__instance.EntityManager) > 0)
                 {
+                    
                     Storage.logger.LogInfo("Processing missions since last session...");
                     float seconds = Storage.getSecondsSinceLastSave(Storage.missionTimeMultiplier.Value);
-                    int proc = MissionHelper.processMissions(__instance.EntityManager, seconds);
+                    int proc = MissionHelper.processMissions(__instance.EntityManager, seconds, Storage.forceCompleteAllMissions.Value);
                     Storage.logger.LogInfo("Processed " + proc.ToString() + " missions. Time reduced by " + seconds.ToString() + " seconds.");
                 }
                 firstTick = false;

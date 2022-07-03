@@ -27,6 +27,7 @@ namespace HuntControl.Injuries
         {
             Storage.injuriesProgressOffline = Storage.Config.Bind<bool>("HuntControl.Injuries", "injuriesProgressOffline", true, "Let injuries heal while offline.");
             Storage.injuryTimeMultiplier = Storage.Config.Bind<float>("HuntControl.Injuries", "injuryTimeMultiplier", 0, "Speed up injury healing. 0 = disabled. 2 = 2x speed, etc.");
+            Storage.forceCompleteAllInjuries = Storage.Config.Bind<bool>("HuntControl.Injuries", "forceCompleteAllInjuries", false, "This option will force every injury to heal immediately on boot then disable itself.");
         }
     }
 
@@ -44,7 +45,7 @@ namespace HuntControl.Injuries
             {
                 float seconds = Storage.getSecondsSinceLastSave(Storage.injuryTimeMultiplier.Value);
                 Storage.logger.LogInfo("Processing all servant coffins...");
-                int proc = InjuryHelper.processInjuries(__instance, seconds);
+                int proc = InjuryHelper.processInjuries(__instance, seconds, Storage.forceCompleteAllInjuries.Value);
                 Storage.logger.LogInfo("Processed " + proc.ToString() + " coffins. Injury time reduced by " + seconds.ToString() + " seconds.");
                 firstTick = false;
                 NoUpdateBefore = DateTime.Now.AddMilliseconds(60000);

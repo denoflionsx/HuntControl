@@ -31,6 +31,8 @@ namespace HuntControl.Lib
         public static ConfigEntry<bool> injuriesProgressOffline;
         public static ConfigEntry<float> injuryTimeMultiplier;
         public static ConfigEntry<long> lastTick;
+        public static ConfigEntry<bool> forceCompleteAllMissions;
+        public static ConfigEntry<bool> forceCompleteAllInjuries;
         public static Dictionary<string, Action<ServantMissionUpdateSystem>> createCallbacks = new Dictionary<string, Action<ServantMissionUpdateSystem>>();
         public static Dictionary<string, Action<ServantMissionUpdateSystem>> updateCallbacks = new Dictionary<string, Action<ServantMissionUpdateSystem>>();
         public static Dictionary<string, Action<ServantMissionUpdateSystem>> destroyCallbacks = new Dictionary<string, Action<ServantMissionUpdateSystem>>();
@@ -41,6 +43,8 @@ namespace HuntControl.Lib
         public static void onUpdate()
         {
             lastTick.Value = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            forceCompleteAllMissions.Value = false;
+            forceCompleteAllInjuries.Value = false;
         }
 
         public static float getSecondsSinceLastSave(float multi)

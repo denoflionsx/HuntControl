@@ -6,7 +6,7 @@ namespace HuntControl.Injuries
 {
     public static class InjuryHelper
     {
-        public static int processInjuries(ServantMissionUpdateSystem __instance, float reduction)
+        public static int processInjuries(ServantMissionUpdateSystem __instance, float reduction, bool forceComplete = false)
         {
 
             int proc = 0;
@@ -28,6 +28,7 @@ namespace HuntControl.Injuries
                     {
                         injury.RecuperateEndTime -= reduction;
                     }
+                    if (forceComplete) injury.RecuperateEndTime = 0;
                     __instance.EntityManager.SetComponentData(injuryEntry, injury);
                     proc++;
                 }
