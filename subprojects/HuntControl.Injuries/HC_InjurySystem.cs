@@ -17,6 +17,7 @@ namespace HuntControl.Injuries
         public static void Register(bool b)
         {
             Storage.updateCallbacks.Add(typeof(InjurySystem_Update).Name, InjurySystem_Update.Prefix);
+            Storage.destroyCallbacks.Add(typeof(InjurySystem_Destroy).Name, InjurySystem_Destroy.Prefix);
         }
     }
 
@@ -28,6 +29,13 @@ namespace HuntControl.Injuries
             Storage.injuriesProgressOffline = Storage.Config.Bind<bool>("HuntControl.Injuries", "injuriesProgressOffline", true, "Let injuries heal while offline.");
             Storage.injuryTimeMultiplier = Storage.Config.Bind<float>("HuntControl.Injuries", "injuryTimeMultiplier", 0, "Speed up injury healing. 0 = disabled. 2 = 2x speed, etc.");
             Storage.forceCompleteAllInjuries = Storage.Config.Bind<bool>("HuntControl.Injuries", "forceCompleteAllInjuries", false, "This option will force every injury to heal immediately on boot then disable itself.");
+        }
+    }
+
+    public static class InjurySystem_Destroy
+    {
+        public static void Prefix(ServantMissionUpdateSystem __instance) {
+            Storage.forceCompleteAllInjuries.Value = false;
         }
     }
 

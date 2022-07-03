@@ -94,6 +94,8 @@ namespace HuntControl
                 {
                     cb(__instance);
                 }
+
+                Storage.onDestroy();
             }
         }
 

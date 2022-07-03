@@ -39,8 +39,7 @@ namespace HuntControl.Missions
     {
         public static void Prefix(ServantMissionUpdateSystem __instance)
         {
-            Storage.logVerbose("ServantMissionUpdateSystem destroyed.");
-            Storage.onDestroy();
+            Storage.forceCompleteAllMissions.Value = false;
         }
     }
 

@@ -43,8 +43,6 @@ namespace HuntControl.Lib
         public static void onUpdate()
         {
             lastTick.Value = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-            forceCompleteAllMissions.Value = false;
-            forceCompleteAllInjuries.Value = false;
         }
 
         public static float getSecondsSinceLastSave(float multi)
