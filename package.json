@@ -1,6 +1,6 @@
 {
   "name": "huntcontrol",
-  "version": "1.3.0",
+  "version": "1.3.2",
   "description": "V Rising mod that makes missions progress when the game is closed",
   "main": "index.js",
   "scripts": {

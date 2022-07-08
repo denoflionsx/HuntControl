@@ -2,7 +2,7 @@ import child_process from 'child_process';
 import fs from 'fs';
 import path from 'path';
 
-child_process.execSync("npm version minor --no-git-tag-version");
+child_process.execSync("npm version patch --no-git-tag-version");
 
 interface meta {
     name: string;

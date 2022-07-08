@@ -35,7 +35,6 @@ namespace HuntControl.Injuries
     public static class InjurySystem_Destroy
     {
         public static void Prefix(ServantMissionUpdateSystem __instance) {
-            Storage.forceCompleteAllInjuries.Value = false;
         }
     }
 

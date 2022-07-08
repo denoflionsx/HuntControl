@@ -40,11 +40,6 @@ namespace HuntControl.Lib
         public static ManualLogSource logger;
         public static bool isAlive = false;
 
-        public static void onUpdate()
-        {
-            lastTick.Value = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-        }
-
         public static float getSecondsSinceLastSave(float multi)
         {
             int current = (int)DateTimeOffset.Now.ToUnixTimeMilliseconds();
@@ -73,13 +68,15 @@ namespace HuntControl.Lib
 
         public static void onSave()
         {
-            onUpdate();
+            lastTick.Value = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             Config.Save();
         }
 
         public static void onDestroy()
         {
             logger.LogInfo("Saving data for server shutdown...");
+            forceCompleteAllMissions.Value = false;
+            forceCompleteAllInjuries.Value = false;
             onSave();
             if (!isAlive) return;
             harmony.UnpatchSelf();
