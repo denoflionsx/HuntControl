@@ -40,6 +40,7 @@ namespace HuntControl.Missions
         public static void Prefix(ServantMissionUpdateSystem __instance)
         {
             Storage.forceCompleteAllMissions.Value = false;
+            Storage.onDestroy();
         }
     }
 
