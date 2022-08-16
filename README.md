@@ -1,3 +1,6 @@
+# Support
+I played this game for like a week and got bored of it. As such I don't support this mod anymore. If anyone wants to continue it feel free to fork.
+
 # HuntControl
  V Rising mod that makes missions progress when the game is closed
 
